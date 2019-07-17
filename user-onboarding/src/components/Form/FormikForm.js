@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as Yup from 'yup';
 
 function FormikForm({values, errors, touched, isSubmitting}) {
+  console.log(isSubmitting);
   return (
     <Form>
       <div className='form-group'>
@@ -58,11 +59,14 @@ export default withFormik({
     formikBag.resetForm();
     console.log('FORM SUCCESSFULLY SUBMITTED');
     const url = 'https://reqres.in/api/users';
+    formikBag.setSubmitting(true);
 
     axios
       .post(url, values)
       .then(res => {
         console.log(res.data);
+        window.alert('form submitted... ' + res.data.name);
+        formikBag.setSubmitting(false);
       })
       .catch(err => {
         console.log(err);
