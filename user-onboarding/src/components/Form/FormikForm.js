@@ -3,7 +3,7 @@ import {withFormik, Field, Form} from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup';
 
-function FormikForm({errors, touched, isSubmitting}) {
+function FormikForm({values, errors, touched, isSubmitting}) {
   return (
     <Form>
       <div className='form-group'>
@@ -53,10 +53,26 @@ export default withFormik({
       checkbox: ''
     };
   },
+
+  handleSubmit: (values, formikBag) => {
+    formikBag.resetForm();
+    console.log('FORM SUCCESSFULLY SUBMITTED');
+    const url = 'https://reqres.in/api/users';
+
+    axios
+      .post(url, values)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+
   validationSchema: Yup.object().shape({
     name: Yup.string()
-      .min(3, 'First Name should be atleast 5 character long')
-      .max(10)
+      .min(5, 'Name should be atleast 5 character long')
+      .max(10, 'Name should be less then 10 character')
       .required('First Name is required'),
     password: Yup.string()
       .min(8)
